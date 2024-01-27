@@ -18,7 +18,7 @@ class Client:
         self.__discord_channel_id = discord_channel_id
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
-        self.client_task = None
+        self.__client_tasks = []  # TODO: create a process to prune these as they finish
         self.__ready = False
 
     def wait_for_ready(func: callable) -> callable:
@@ -48,8 +48,8 @@ class Client:
                 )
             self.__ready = True
 
-        self.client_task = asyncio.create_task(
-            self.__discord_client.start(self.__discord_client_token)
+        self.__client_tasks.append(
+            asyncio.create_task(self.__discord_client.start(self.__discord_client_token))
         )
 
         await asyncio.sleep(0)  # Allow the event loop to start the client
@@ -57,10 +57,12 @@ class Client:
 
     async def stop(self):
         self.__logger.info("STOPPING DISCORD CLIENT")
-        if self.client_task:
-            self.client_task.cancel()
+        for task in self.__client_tasks:
+            task_name = getattr(task.get_coro(), "__name__", "Unknown Task")
+            self.__logger.info(f"CANCELING TASK: {task_name}")
+            task.cancel()
             try:
-                await self.client_task
+                await task
             except asyncio.CancelledError:
                 pass
 
