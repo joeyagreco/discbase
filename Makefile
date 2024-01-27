@@ -15,6 +15,10 @@ fmt:
 	@autoflake --config=pyproject.toml .
 	@isort .
 
+.PHONY: test
+test:
+	@pytest test/
+
 .PHONY: pkg-build
 pkg-build:
 	@rm -rf build
