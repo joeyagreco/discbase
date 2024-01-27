@@ -1,4 +1,5 @@
 import asyncio
+from functools import wraps
 from typing import Optional
 
 from discord import Client as DiscordClient
@@ -18,6 +19,18 @@ class Client:
         self.__discord_channel: Optional[GuildChannel] = None
         self.client_task = None
         self.__ready = False
+
+    def wait_for_ready(func: callable) -> callable:
+        @wraps(func)
+        async def wrapper(self, *args, **kwargs) -> any:
+            max_wait_time_seconds = 5
+            for _ in range(max_wait_time_seconds):
+                if self.__ready:
+                    return await func(self, *args, **kwargs)
+                await asyncio.sleep(1)
+            raise Exception(f"TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS")
+
+        return wrapper
 
     async def start(self):
         self.__logger.info("STARTING DISCORD CLIENT")
@@ -46,14 +59,6 @@ class Client:
             except asyncio.CancelledError:
                 pass
 
-    async def wait_for_ready(self):
-        max_wait_time_seconds = 5
-        for _ in range(max_wait_time_seconds):
-            if self.__ready:
-                return
-            await asyncio.sleep(1)
-        raise Exception(f"TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS")
-
+    @wait_for_ready
     async def write_kv(self, kv: KeyValue) -> None:
-        await self.wait_for_ready()
         return await self.__discord_channel.send(kv.to_dict())
