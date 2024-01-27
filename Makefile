@@ -14,3 +14,17 @@ fmt:
 	@black --config=pyproject.toml .
 	@autoflake --config=pyproject.toml .
 	@isort .
+
+.PHONY: pkg-build
+pkg-build:
+	@rm -rf build
+	@rm -rf dist
+	@python3 setup.py sdist bdist_wheel
+
+.PHONY: pkg-test
+pkg-test:
+	@python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+.PHONY: pkg-prod
+pkg-prod:
+	@python3 -m twine upload dist/*
