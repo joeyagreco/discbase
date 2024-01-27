@@ -2,7 +2,7 @@ import logging
 import sys
 from logging import LogRecord
 
-from util.CustomFormatter import CustomFormatter
+from .CustomFormatter import CustomFormatter
 
 
 class CustomLogRecord(LogRecord):
