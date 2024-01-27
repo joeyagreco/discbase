@@ -23,7 +23,7 @@ pkg-build:
 
 .PHONY: pkg-test
 pkg-test:
-	@python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	@python3 -m twine upload testpypi dist/*
 
 .PHONY: pkg-prod
 pkg-prod:
