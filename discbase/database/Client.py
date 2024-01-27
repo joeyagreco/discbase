@@ -1,4 +1,5 @@
 import asyncio
+from typing import Optional
 
 from discord import Client as DiscordClient
 from discord import Intents
@@ -14,12 +15,9 @@ class Client:
         self.__discord_client_token = discord_client_token
         self.__discord_channel_id = discord_channel_id
         self.__discord_client = DiscordClient(intents=Intents.all())
-        self.__discord_channel = None
+        self.__discord_channel: Optional[GuildChannel] = None
         self.client_task = None
         self.__ready = False
-
-    def __get_channel(self, channel_id: int) -> GuildChannel:
-        return self.__discord_client.get_channel(channel_id)
 
     async def start(self):
         self.__logger.info("STARTING DISCORD CLIENT")
@@ -29,7 +27,7 @@ class Client:
             self.__logger.important(f"DISCBASE IS RUNNING WITH USER {self.__discord_client.user}")
             self.__discord_channel = self.__discord_client.get_channel(self.__discord_channel_id)
             if self.__discord_channel == None:
-                print("NONE CHANNEL")
+                raise Exception(f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}")
             self.__ready = True
 
         self.client_task = asyncio.create_task(
