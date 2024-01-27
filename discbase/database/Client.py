@@ -1,6 +1,7 @@
 import asyncio
 from functools import wraps
 from typing import Optional
+from discbase.util.error import log_and_raise
 
 from discord import Client as DiscordClient
 from discord import Intents
@@ -28,7 +29,7 @@ class Client:
                 if self.__ready:
                     return await func(self, *args, **kwargs)
                 await asyncio.sleep(1)
-            raise Exception(f"TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS")
+            log_and_raise(self.__logger, "TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS")
 
         return wrapper
 
@@ -40,7 +41,7 @@ class Client:
             self.__logger.important(f"DISCBASE IS RUNNING WITH USER {self.__discord_client.user}")
             self.__discord_channel = self.__discord_client.get_channel(self.__discord_channel_id)
             if self.__discord_channel == None:
-                raise Exception(f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}")
+                log_and_raise(self.__logger, f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}")
             self.__ready = True
 
         self.client_task = asyncio.create_task(
