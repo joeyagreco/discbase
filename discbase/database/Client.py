@@ -17,11 +17,12 @@ class Client:
         self.__discord_channel_id = discord_channel_id
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
-        self.__client_tasks = []  # TODO: create a process to prune these as they finish
+        self.__client_tasks = []  # TODO: create a process to prune this as the tasks finish
         self.__ready = False
 
     def __del__(self):
-        # NOTE: this is not guaranteed to be called on instance deletion, but it is better than not having it.
+        # NOTE: this is not guaranteed to be called on instance deletion,
+        # but it is better than not having it in case consumers forget to stop the client.
         self.stop()
 
     def wait_for_ready(func: callable) -> callable:
@@ -54,7 +55,6 @@ class Client:
         self.__client_tasks.append(
             asyncio.create_task(self.__discord_client.start(self.__discord_client_token))
         )
-
         await asyncio.sleep(0)  # Allow the event loop to start the client
         await self.__discord_client.wait_until_ready()
 
@@ -68,10 +68,6 @@ class Client:
                 await task
             except asyncio.CancelledError:
                 pass
-
-    # @wait_for_ready
-    # async def write_kv(self, kv: KeyValue) -> None:
-    #     return await self.__discord_channel.send(kv.to_dict())
 
     @wait_for_ready
     async def dump(self, value: any) -> None:
