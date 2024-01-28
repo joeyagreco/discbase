@@ -6,7 +6,6 @@ from discord import Client as DiscordClient
 from discord import Intents
 from discord.abc import GuildChannel
 
-from discbase.model.KeyValue import KeyValue
 from discbase.util.CustomLogger import CustomLogger
 from discbase.util.error import log_and_raise
 
@@ -20,6 +19,10 @@ class Client:
         self.__discord_channel: Optional[GuildChannel] = None
         self.__client_tasks = []  # TODO: create a process to prune these as they finish
         self.__ready = False
+
+    def __del__(self):
+        # NOTE: this is not guaranteed to be called on instance deletion, but it is better than not having it.
+        self.stop()
 
     def wait_for_ready(func: callable) -> callable:
         @wraps(func)
@@ -66,6 +69,10 @@ class Client:
             except asyncio.CancelledError:
                 pass
 
+    # @wait_for_ready
+    # async def write_kv(self, kv: KeyValue) -> None:
+    #     return await self.__discord_channel.send(kv.to_dict())
+
     @wait_for_ready
-    async def write_kv(self, kv: KeyValue) -> None:
-        return await self.__discord_channel.send(kv.to_dict())
+    async def dump(self, value: any) -> None:
+        return await self.__discord_channel.send(value)
