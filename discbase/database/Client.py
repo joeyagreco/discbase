@@ -1,6 +1,7 @@
 import asyncio
 from functools import wraps
 from typing import Optional
+from discbase.model.StoredRecord import StoredRecord
 
 from discord import Client as DiscordClient
 from discord import Intents
@@ -18,7 +19,7 @@ class Client:
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
         self.__client_tasks = []  # TODO: create a process to prune this as the tasks finish
-        self.__ready = False
+        self.__ready = False  # NOTE: linter thinks this isn't used but it is
 
     def __del__(self):
         # NOTE: this is not guaranteed to be called on instance deletion,
@@ -37,6 +38,13 @@ class Client:
                 self.__logger, "TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS"
             )
 
+        return wrapper
+    
+    def response_as_stored_record(func: callable) -> callable:
+        @wraps(func)
+        async def wrapper(self, *args, **kwargs) -> any:
+            discord_message_response = await func(self, *args, **kwargs)
+            return StoredRecord.from_discord_message(discord_message_response)
         return wrapper
 
     async def start(self):
@@ -69,6 +77,7 @@ class Client:
             except asyncio.CancelledError:
                 pass
 
+    @response_as_stored_record
     @wait_for_ready
-    async def dump(self, value: any) -> None:
+    async def dump(self, value: any) -> StoredRecord:
         return await self.__discord_channel.send(value)
