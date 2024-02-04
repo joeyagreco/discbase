@@ -83,6 +83,7 @@ class Client:
     async def stop(self):
         """
         Stops the client.
+        THE CLIENT MUST BE STOPPED IF STARTED BEFORE TERMINATION.
         """
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
