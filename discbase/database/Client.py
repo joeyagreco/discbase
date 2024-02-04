@@ -97,9 +97,16 @@ class Client:
     @discord_message_to_stored_record
     @wait_for_ready
     async def dump(self, value: any) -> StoredRecord:
+        """
+        Dumps the given value into the Discord database.
+        Returns a StoredRecord that represents the data that will be returned on retrieval of this data.
+        """
         return await self.__discord_channel.send(value)
 
     @discord_message_to_stored_record
     @wait_for_ready
     async def retrieve(self, *, record_id: Optional[int] = None) -> StoredRecord:
+        """
+        Retrieves the data from the Discord database.
+        """
         return await self.__discord_channel.fetch_message(record_id)
