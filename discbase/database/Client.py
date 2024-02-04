@@ -1,12 +1,12 @@
 import asyncio
 from functools import wraps
 from typing import Optional
-from discbase.model.StoredRecord import StoredRecord
 
 from discord import Client as DiscordClient
 from discord import Intents
 from discord.abc import GuildChannel
 
+from discbase.model.StoredRecord import StoredRecord
 from discbase.util.CustomLogger import CustomLogger
 from discbase.util.error import log_and_raise
 
@@ -27,6 +27,11 @@ class Client:
         self.stop()
 
     def wait_for_ready(func: callable) -> callable:
+        """
+        Waits for the client to be ready before running the wrapped function.
+        If the client is not ready before the timeout, will raise an exception.
+        """
+
         @wraps(func)
         async def wrapper(self, *args, **kwargs) -> any:
             max_wait_time_seconds = 5
@@ -39,15 +44,24 @@ class Client:
             )
 
         return wrapper
-    
-    def response_as_stored_record(func: callable) -> callable:
+
+    def discord_message_to_stored_record(func: callable) -> callable:
+        """
+        Wraps a function that returns a Discord Message.
+        Turns the response from a Discord Message to a StoredRecord.
+        """
+
         @wraps(func)
         async def wrapper(self, *args, **kwargs) -> any:
             discord_message_response = await func(self, *args, **kwargs)
             return StoredRecord.from_discord_message(discord_message_response)
+
         return wrapper
 
     async def start(self):
+        """
+        Starts the client.
+        """
         self.__logger.info("STARTING DISCORD CLIENT")
 
         @self.__discord_client.event
@@ -67,6 +81,9 @@ class Client:
         await self.__discord_client.wait_until_ready()
 
     async def stop(self):
+        """
+        Stops the client.
+        """
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
             task_name = getattr(task.get_coro(), "__name__", "Unknown Task")
@@ -74,10 +91,15 @@ class Client:
             task.cancel()
             try:
                 await task
-            except asyncio.CancelledError:
-                pass
+            except asyncio.CancelledError as e:
+                self.__logger.debug(e)
 
-    @response_as_stored_record
+    @discord_message_to_stored_record
     @wait_for_ready
     async def dump(self, value: any) -> StoredRecord:
         return await self.__discord_channel.send(value)
+
+    @discord_message_to_stored_record
+    @wait_for_ready
+    async def retrieve(self, *, record_id: Optional[int] = None) -> StoredRecord:
+        return await self.__discord_channel.fetch_message(record_id)
