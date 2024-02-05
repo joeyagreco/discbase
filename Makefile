@@ -15,6 +15,12 @@ fmt:
 	@autoflake --config=pyproject.toml .
 	@isort .
 
+.PHONY: fmt-check
+fmt-check:
+	@black --config=pyproject.toml . --check
+	@autoflake --config=pyproject.toml . --check
+	@isort . --check-only
+
 .PHONY: test
 test:
 	@pytest test/
