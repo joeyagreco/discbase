@@ -10,6 +10,8 @@ from discbase.enumeration.URLType import URLType
 
 
 def get_random_string(length: int) -> str:
+    if length < 1:
+        raise Exception("Length must be greater than or equal to 1.")
     characters = string.ascii_letters + string.digits
     return "".join(random.choice(characters) for _ in range(length))
 
