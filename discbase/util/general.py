@@ -6,8 +6,6 @@ from urllib.parse import urlparse
 
 from discbase.enumeration.URLType import URLType
 
-# TODO: test these
-
 
 def get_random_string(length: int) -> str:
     if length < 1:
