@@ -32,9 +32,12 @@ pip install discbase
 5. Paste the application ID you saved into the following URL and paste it into any browser
     - https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID_HERE&permissions=8&scope=bot
 5. Select the server you would like to add this to and follow the prompts to authorize
-6. Go to the server that you want to use. The bot you created should be there
-7. Find or create the channel you would like to use for storage, right click on the name and copy the channel ID
-8. Use the `Token` and `Channel ID` to start the client
+
+### Pick a Channel to Use for Storage
+1. Go to the server that you want to use. The bot you created should be there
+2. Find or create the channel you would like to use for storage, right click on the name and copy the channel ID
+
+### Run the Client
 
 ```python3
 import asyncio
