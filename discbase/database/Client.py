@@ -29,7 +29,7 @@ class Client:
     def __del__(self):
         # NOTE: this is not guaranteed to be called on instance deletion,
         # but it is better than not having it in case consumers forget to stop the client.
-        self.stop()
+        asyncio.run(self.stop())
 
     async def __send_with_file(self, *, file_path: str, filename: str, content: str) -> Message:
         file = File(file_path, filename=filename)
