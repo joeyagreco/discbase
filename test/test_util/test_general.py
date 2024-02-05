@@ -1,6 +1,8 @@
+import tempfile
 import unittest
 
-from discbase.util.general import get_file_extension, get_random_string
+from discbase.enumeration.URLType import URLType
+from discbase.util.general import get_file_extension, get_random_string, get_url_type
 
 
 class TestGeneral(unittest.TestCase):
@@ -27,3 +29,12 @@ class TestGeneral(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             get_file_extension("foo")
         self.assertEqual("No file extension found.", str(context.exception))
+
+    def test_get_url_type(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            url_local = get_url_type(tmp_dir)
+        url_online = get_url_type("http://foo/bar")
+        url_unknown = get_url_type("")
+        self.assertEqual(URLType.LOCAL, url_local)
+        self.assertEqual(URLType.ONLINE, url_online)
+        self.assertEqual(URLType.UNKNOWN, url_unknown)
