@@ -21,7 +21,10 @@ def get_file_extension(file_path: str) -> str:
     Takes a path of a file and returns the extension with a "."
     "foo/bar.png" -> ".png"
     """
-    return Path(file_path).suffix
+    extension = Path(file_path).suffix
+    if extension == "":
+        raise Exception("No file extension found.")
+    return extension
 
 
 def get_url_type(url: str) -> URLType:
