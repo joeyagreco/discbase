@@ -3,12 +3,12 @@ import os
 import tempfile
 from functools import wraps
 from typing import Optional
-from discbase.enumeration.URLType import URLType
 
 from discord import Client as DiscordClient
 from discord import File, Intents, Message
 from discord.abc import GuildChannel
 
+from discbase.enumeration.URLType import URLType
 from discbase.model.StoredRecord import StoredRecord
 from discbase.util.CustomLogger import CustomLogger
 from discbase.util.error import log_and_raise
@@ -30,7 +30,7 @@ class Client:
         # NOTE: this is not guaranteed to be called on instance deletion,
         # but it is better than not having it in case consumers forget to stop the client.
         self.stop()
-        
+
     async def __save_file(self, *, file_path: str, filename: str) -> Message:
         file = File(file_path, filename=filename)
         return await self.__discord_channel.send(file=file)
@@ -121,7 +121,7 @@ class Client:
         Returns a StoredRecord that represents the data that will be returned on retrieval of this data.
         """
         url_type = get_url_type(media_path)
-        if url_type == URLType.UNKNOWN: 
+        if url_type == URLType.UNKNOWN:
             raise Exception("URL Type unknown")
         media_extension = get_file_extension(media_path)
         filename = f"media_{get_random_string(10)}{media_extension}"
@@ -132,8 +132,6 @@ class Client:
                 return await self.__save_file(file_path=tmp_media_path, filename=filename)
         else:
             return await self.__save_file(file_path=media_path, filename=filename)
-        
-
 
     @discord_message_to_stored_record
     @wait_for_ready

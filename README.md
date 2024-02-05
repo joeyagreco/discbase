@@ -6,3 +6,14 @@
 <a target="_blank" href="https://www.python.org/downloads/" title="Python version"><img src="https://img.shields.io/badge/python-%3E=_3.10-teal.svg"></a>
 ![Last Commit](https://img.shields.io/github/last-commit/joeyagreco/discbase)
 </div>
+
+## Disclaimer
+Use this library responsibly and be sure to read [Discord's Terms of Service](https://discord.com/terms) before using.
+
+
+## Development
+
+_Run these commands from the root folder_
+- Install Dependencies: `make deps`
+- Format Code: `make fmt`
+- Run Unit Tests: `make test`
