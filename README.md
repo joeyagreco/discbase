@@ -42,8 +42,10 @@ import asyncio
 from discbase.database.Client import Client
 
 if __name__ == "__main__":
-    TOKEN = {token here as str}
-    CHANNEL_ID = {channel id here as int}
+    # put your token here as a string
+    TOKEN = "TOKEN_123"
+    # put your channel id here as an integer
+    CHANNEL_ID = 123
     client = Client(discord_client_token=TOKEN, discord_channel_id=CHANNEL_ID)
     
     async def main():
