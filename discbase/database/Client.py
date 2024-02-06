@@ -76,6 +76,9 @@ class Client:
 
         return wrapper
 
+    def alive(self) -> bool:
+        return self.__ready and len(self.__client_tasks) == 0
+
     async def start(self):
         """
         Starts the client.
