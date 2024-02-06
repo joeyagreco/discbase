@@ -83,8 +83,10 @@ from discbase.database.Client import Client
 
 if __name__ == "__main__":
     async def main():
+        # this runs the client
         async with Client(discord_client_token="TOKEN_123", discord_channel_id=123) as c:
             await c.dump(value="foo")
+        # the client is now closed automatically
 
     asyncio.run(main())
 ```
