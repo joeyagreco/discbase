@@ -99,4 +99,4 @@ if __name__ == "__main__":
 _Run these commands from the root folder_
 - Install Dependencies: `make deps`
 - Format Code: `make fmt`
-- Run Unit Tests: `make test`
+- Run Unit Tests: `make test-unit`

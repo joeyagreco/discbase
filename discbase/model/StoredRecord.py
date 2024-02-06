@@ -6,7 +6,7 @@ from datetime import datetime
 from discord import Message
 
 
-@dataclass(kw_only=True, eq=False)
+@dataclass(kw_only=True)
 class StoredRecord:
     record_id: int
     text_data: str

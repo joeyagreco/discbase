@@ -20,9 +20,13 @@ fmt-check:
 	@autoflake --config=pyproject.toml . --check
 	@isort . --check-only
 
-.PHONY: test
-test:
+.PHONY: test-unit
+test-unit:
 	@pytest test/
+
+.PHONY: test-e2e
+test-e2e:
+	@pytest e2e_test/
 
 .PHONY: pkg-build
 pkg-build:
