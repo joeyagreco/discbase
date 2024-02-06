@@ -77,7 +77,10 @@ class Client:
         return wrapper
 
     def alive(self) -> bool:
-        return self.__ready and len(self.__client_tasks) == 0
+        """
+        Checks if this client is alive and running.
+        """
+        return self.__ready or len(self.__client_tasks) > 0
 
     async def start(self):
         """
@@ -117,6 +120,8 @@ class Client:
                 await task
             except asyncio.CancelledError as e:
                 self.__logger.debug(e)
+        self.__ready = False
+        self.__client_tasks = []
 
     @discord_message_to_stored_record
     @wait_for_ready
