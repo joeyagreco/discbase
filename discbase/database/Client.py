@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import os
 import tempfile
@@ -30,6 +32,13 @@ class Client:
         # NOTE: this is not guaranteed to be called on instance deletion,
         # but it is better than not having it in case consumers forget to stop the client.
         asyncio.run(self.stop())
+
+    async def __aenter__(self) -> Client:
+        await self.start()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> Client:
+        await self.stop()
 
     async def __send_with_file(self, *, file_path: str, filename: str, content: str) -> Message:
         file = File(file_path, filename=filename)
@@ -94,6 +103,8 @@ class Client:
         Stops the client.
         THE CLIENT MUST BE STOPPED IF STARTED BEFORE TERMINATION.
         """
+        if len(self.__client_tasks) == 0:
+            return
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
             task_name = getattr(task.get_coro(), "__name__", "Unknown Task")

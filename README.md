@@ -70,6 +70,25 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### Alternatively, Run the Client as a Context Manager
+
+This is much slower as each time the context manager is used, it has to start up the client and connect first.
+
+The advantage is closing will always be taken care of automatically.
+
+```python3
+import asyncio
+
+from discbase.database.Client import Client
+
+if __name__ == "__main__":
+    async def main():
+        async with Client(discord_client_token="TOKEN_123", discord_channel_id=123) as c:
+            await c.dump(value="foo")
+
+    asyncio.run(main())
+```
+
 
 
 
