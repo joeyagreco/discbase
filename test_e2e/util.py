@@ -10,5 +10,6 @@ def get_client() -> Client:
     CHANNEL_ID = EnvironmentReader.get("E2E_CHANNEL_ID", as_type=int)
     return Client(discord_client_token=TOKEN, discord_channel_id=CHANNEL_ID)
 
+
 def client_shutdown_successfully(client: Client) -> bool:
     return not client.alive()
