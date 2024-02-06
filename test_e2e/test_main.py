@@ -1,7 +1,7 @@
 import asyncio
 import unittest
 
-from e2e_test.util import get_client
+from test_e2e.util import get_client
 
 
 class TestMain(unittest.TestCase):

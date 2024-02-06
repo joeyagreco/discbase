@@ -22,11 +22,11 @@ fmt-check:
 
 .PHONY: test-unit
 test-unit:
-	@pytest test/
+	@pytest test_unit/
 
 .PHONY: test-e2e
 test-e2e:
-	@pytest e2e_test/
+	@pytest test_e2e/
 
 .PHONY: pkg-build
 pkg-build:
