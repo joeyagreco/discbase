@@ -15,3 +15,13 @@ class TestClientState(unittest.TestCase):
 
         asyncio.run(main())
         self.assertFalse(client.alive())
+
+    def test_client_as_context_manager(self):
+        client = get_client()
+
+        async def main():
+            async with client as c:
+                self.assertTrue(c.alive())
+
+        asyncio.run(main())
+        self.assertFalse(client.alive())
