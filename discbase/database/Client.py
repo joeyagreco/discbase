@@ -26,7 +26,7 @@ class Client:
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
         self.__client_tasks = []  # TODO: create a process to prune this as the tasks finish
-        self.__ready = False  # NOTE: linter thinks this isn't used but it is
+        self.__ready = False
 
     def __del__(self):
         # NOTE: this is not guaranteed to be called on instance deletion,
