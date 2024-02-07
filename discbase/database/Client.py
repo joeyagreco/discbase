@@ -40,6 +40,13 @@ class Client:
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> Client:
         await self.stop()
 
+    def __cleanup_after_stop(self) -> None:
+        """
+        Puts client into a good state after it has been stopped.
+        """
+        self.__ready = False
+        self.__client_tasks = []
+
     async def __send_with_file(self, *, file_path: str, filename: str, content: str) -> Message:
         file = File(file_path, filename=filename)
         return await self.__discord_channel.send(content=content, file=file)
@@ -109,7 +116,7 @@ class Client:
         Stops the client.
         THE CLIENT MUST BE STOPPED IF STARTED BEFORE TERMINATION.
         """
-        if len(self.__client_tasks) == 0:
+        if not self.alive():
             return
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
@@ -120,8 +127,7 @@ class Client:
                 await task
             except asyncio.CancelledError as e:
                 self.__logger.debug(e)
-        self.__ready = False
-        self.__client_tasks = []
+        self.__cleanup_after_stop()
 
     @discord_message_to_stored_record
     @wait_for_ready
