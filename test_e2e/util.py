@@ -1,3 +1,5 @@
+import unittest
+
 from dotenv import load_dotenv
 
 from discbase.database.Client import Client
@@ -13,3 +15,10 @@ def get_client() -> Client:
 
 def client_shutdown_successfully(client: Client) -> bool:
     return not client.alive()
+
+
+def run_async_test(test_instance: unittest.TestCase, coro):
+    """
+    Utility method to run an async coroutine with the event loop.
+    """
+    return test_instance.loop.run_until_complete(coro)
