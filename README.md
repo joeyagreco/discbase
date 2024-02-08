@@ -26,9 +26,7 @@ pip install discbase
 
 1. Navigate to the [Discord Developer Applications page](https://discord.com/developers/applications)
 2. Create a new application and name it
-</br>
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/create_an_application.png" width="500" height="250">
-</br>
 3. Navigate to `Settings/General Information` and save the `Application ID`
 4. Navigate to `Settings/Bot`
     - Click `Reset Token`, and save the `Token`
