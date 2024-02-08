@@ -26,26 +26,26 @@ pip install discbase
 
 1. Navigate to the [Discord Developer Applications page](https://discord.com/developers/applications)
 2. Create a new application and name it
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/create_an_application.png" width="500" height="350">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/create_an_application.png" width="400">
 3. Navigate to `Settings/General Information` and save the `Application ID`
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_general_information.png" width="500"
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/application_id.png" width="500">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_general_information.png" width="400"
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/application_id.png" width="400">
 4. Navigate to `Settings/Bot`
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_bot.png" width="500">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_bot.png" width="400">
     - Click `Reset Token`, and save the `Token`
-    <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/reset_token.png" width="500">
+    <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/reset_token.png" width="400">
     - Enable `Presence Intent`, `Server Members Intent`, and `Message Content Intent`
-    <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/privileged_intents.png" width="500">
+    <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/privileged_intents.png" width="400">
 5. Paste the application ID you saved into the following URL and paste it into any browser
     - https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID_HERE&permissions=8&scope=bot
 5. Select the server you would like to add this to and follow the prompts to authorize
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/add_bot_to_server.png" width="500">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/add_bot_to_server.png" width="400">
 
 ### Pick a Channel to Use for Storage
 1. Go to the server that you want to use. The bot you created should be there
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/offline_bot.png" width="500">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/offline_bot.png" width="400">
 2. Find or create the channel you would like to use for storage, right click on the name and copy the channel ID
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/copy_channel_id.png" width="500">
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/copy_channel_id.png" width="400">
 
 ### Run the Client
 
