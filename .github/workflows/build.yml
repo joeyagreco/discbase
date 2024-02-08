@@ -21,31 +21,32 @@ permissions:
   contents: read
 
 jobs:
-    build:
-        name: build
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v2
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-        - name: Get Current Required Python Version
-          id: get-python-versions
-          run: |
-            MINIMUM_VERSION=$(grep -oP '__version_minimum_python__ = "\K.*(?=")' leeger/_version.py)
-            echo "CURRENT_VERSION=$MINIMUM_VERSION" >> $GITHUB_ENV
+      - name: Get Current Required Python Version
+        id: get-python-versions
+        run: |
+          MINIMUM_VERSION=$(grep -oP '__version_minimum_python__ = "\K.*(?=")' leeger/_version.py)
+          echo "CURRENT_VERSION=$MINIMUM_VERSION" >> $GITHUB_ENV
 
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with: python-version: ${{ env.CURRENT_VERSION }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.CURRENT_VERSION }}
 
-        - name: Install Dependencies
-          run: |
-            python -m pip install --upgrade pip
-            make deps
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          make deps
 
-        - name: Build Package
-          run: make build
+      - name: Build Package
+        run: make build
 
-        - name: Check Package
-          run: |
-            twine check dist/*
+      - name: Check Package
+        run: |
+          twine check dist/*
