@@ -3,3 +3,4 @@ autoflake~=2.1.1
 isort~=5.12.0
 pipreqs~=0.4.13
 pytest~=8.0.0
+wheel~=0.42.0
