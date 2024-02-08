@@ -36,7 +36,8 @@ pkg-build:
 
 .PHONY: pkg-test
 pkg-test:
-	@python3 -m twine upload testpypi dist/*
+	@python3 -m twine upload --repository testpypi dist/*
+
 
 .PHONY: pkg-prod
 pkg-prod:
