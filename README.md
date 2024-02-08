@@ -32,13 +32,13 @@ pip install discbase
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/application_id.png" width="400">
 4. Navigate to `Settings/Bot`
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_bot.png" width="400">
-    - Click `Reset Token`, and save the `Token`
+    a. Click `Reset Token`, and save the `Token`
     <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/reset_token.png" width="400">
-    - Enable `Presence Intent`, `Server Members Intent`, and `Message Content Intent`
+    b. Enable `Presence Intent`, `Server Members Intent`, and `Message Content Intent`
     <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/privileged_intents.png" width="400">
 5. Paste the application ID you saved into the following URL and paste it into any browser
-    - https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID_HERE&permissions=8&scope=bot
-5. Select the server you would like to add this to and follow the prompts to authorize
+    a. https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID_HERE&permissions=8&scope=bot
+6. Select the server you would like to add this to and follow the prompts to authorize
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/add_bot_to_server.png" width="400">
 
 ### Pick a Channel to Use for Storage
