@@ -8,6 +8,7 @@
 <br>
 ![E2E Tests](https://github.com/joeyagreco/discbase/actions/workflows/e2e-tests.yml/badge.svg)
 ![Unit Tests](https://github.com/joeyagreco/discbase/actions/workflows/unit-tests.yml/badge.svg)
+![Build](https://github.com/joeyagreco/discbase/actions/workflows/build.yml/badge.svg)
 ![Formatting Check](https://github.com/joeyagreco/discbase/actions/workflows/formatting-check.yml/badge.svg)
 </div>
 
