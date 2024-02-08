@@ -18,7 +18,7 @@ setuptools.setup(
     version=package_version,
     author="Joey Greco",
     author_email="joeyagreco@gmail.com",
-    description="",  # TODO
+    description="Discord as a Service",
     long_description_content_type="text/markdown",
     long_description=read_me,
     license="MIT",
@@ -27,5 +27,5 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=("test", "docs")),
     install_requires=required_packages,
     python_requires=f">={minimum_python_version_required}",
-    keywords="",  # TODO
+    keywords="discord database db",
 )
