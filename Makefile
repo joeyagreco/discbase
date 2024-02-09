@@ -1,3 +1,5 @@
+SPEEDTEST_COUNT = 10
+
 .PHONY: run
 run: 
 	python3.10 discbase/run.py
@@ -22,7 +24,7 @@ fmt-check:
 
 .PHONY: speedtest
 speedtest:
-	@python3.10 speedtest.py
+	@python3.10 speedtest.py $(SPEEDTEST_COUNT)
 
 .PHONY: test-unit
 test-unit:

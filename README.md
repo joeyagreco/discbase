@@ -110,9 +110,13 @@ if __name__ == "__main__":
 ``` 
 
 ## Performance
-To perform a speedtest, run `make speedtest`
-
 **NOTE:** You will need to save environment variables for `BOT_TOKEN` and `CHANNEL_ID` before running this.
+```bash
+$ export BOT_TOKEN='token'            # your bot token here
+$ export CHANNEL_ID=12345             # your discord channel id
+$ make speedtest                      # run speedtest with default number of messages
+$ make speedtest SPEEDTEST_COUNT=100  # run speedtest with 100 messages
+```
 
 ## Development
 

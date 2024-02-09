@@ -1,4 +1,5 @@
 import asyncio
+import sys
 import time
 
 from dotenv import load_dotenv
@@ -35,4 +36,10 @@ if __name__ == "__main__":
             print(f"Retrieved {count} messages in {total_time:.2f} seconds.")
             print(f"{count / total_time:.2f} messages per second.")
 
-    asyncio.run(main(10))
+    # Check if at least one additional argument is provided
+    if len(sys.argv) <= 1:
+        print("No speedtest count provided")
+        exit(1)
+    count = int(sys.argv[1])
+
+    asyncio.run(main(count))
