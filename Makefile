@@ -20,6 +20,10 @@ fmt-check:
 	@autoflake --config=pyproject.toml . --check
 	@isort . --check-only
 
+.PHONY: speedtest
+speedtest:
+	@python3.10 speedtest.py
+
 .PHONY: test-unit
 test-unit:
 	@pytest test_unit/

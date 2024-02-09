@@ -107,7 +107,12 @@ if __name__ == "__main__":
         # the client is now closed automatically
 
     asyncio.run(main())
-```
+``` 
+
+## Performance
+To perform a speedtest, run `make speedtest`
+
+**NOTE:** You will need to save environment variables for `BOT_TOKEN` and `CHANNEL_ID` before running this.
 
 ## Development
 
