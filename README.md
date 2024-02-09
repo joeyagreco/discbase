@@ -57,7 +57,7 @@ pip install discbase
 
 ### Run the Client
 
-```python3
+```python
 import asyncio
 
 from discbase.database.Client import Client
@@ -94,7 +94,7 @@ This is much slower as each time the context manager is used, it has to start up
 
 The advantage is closing will always be taken care of automatically.
 
-```python3
+```python
 import asyncio
 
 from discbase.database.Client import Client
