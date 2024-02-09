@@ -109,12 +109,13 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-
-
-
 ## Development
 
 _Run these commands from the root folder_
 - Install Dependencies: `make deps`
 - Format Code: `make fmt`
 - Run Unit Tests: `make test-unit`
+
+## Styling
+
+Primary Color: `#8557BA`
