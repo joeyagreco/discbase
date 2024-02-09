@@ -34,7 +34,7 @@ class TestDump(unittest.TestCase):
     def test_dump_image_local(self):
         async def main():
             local_image_path = os.path.join(self.RESOURCES_PATH, "image.jpg")
-            stored_record = await self.client.dump(media_path=local_image_path)
+            stored_record = await self.client.dump(media_paths=[local_image_path])
             self.assertEqual("", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
             self.assertEqual(1, len(stored_record.media_urls))
@@ -46,7 +46,7 @@ class TestDump(unittest.TestCase):
     def test_dump_image_online(self):
         async def main():
             stored_record = await self.client.dump(
-                media_path="https://en.wikipedia.org/wiki/Discord#/media/File:Discord_logo.svg"
+                media_paths=["https://en.wikipedia.org/wiki/Discord#/media/File:Discord_logo.svg"]
             )
             self.assertEqual("", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
@@ -60,7 +60,7 @@ class TestDump(unittest.TestCase):
         local_image_path = os.path.join(self.RESOURCES_PATH, "image.jpg")
 
         async def main():
-            stored_record = await self.client.dump(value="foo", media_path=local_image_path)
+            stored_record = await self.client.dump(value="foo", media_paths=[local_image_path])
             self.assertEqual("foo", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
             self.assertEqual(1, len(stored_record.media_urls))

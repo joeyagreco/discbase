@@ -48,8 +48,10 @@ class Client:
         self.__client_tasks = []
 
     async def __send_with_file(self, *, file_path: str, filename: str, content: str) -> Message:
-        file = File(file_path, filename=filename)
-        return await self.__discord_channel.send(content=content, file=file)
+        files = []
+        for _ in range(10):
+            files.append(File(file_path, filename=filename))
+        return await self.__discord_channel.send(content=content, files=files)
 
     def wait_for_ready(func: callable) -> callable:
         """
@@ -132,38 +134,37 @@ class Client:
     @discord_message_to_stored_record
     @wait_for_ready
     async def dump(
-        self, *, value: Optional[str] = None, media_path: Optional[str] = None
+        self, *, value: Optional[str] = None, media_paths: Optional[list[str]] = None
     ) -> StoredRecord:
         """
         Dumps into the Discord database.
         Returns a StoredRecord that represents the data that will be returned on retrieval of this data.
         """
         # validate that we got something
-        if all(value is None for value in (value, media_path)):
+        if all(value is None for value in (value, media_paths)):
             raise Exception("Did not receive anything to dump.")
 
         # default to empty string for value
-        value = "" if value is None else value
+        value: str = "" if value is None else value
+        files: list[File] = []
+        media_paths = media_paths or []
 
-        if media_path is not None:
-            url_type = get_url_type(media_path)
-            if url_type == URLType.UNKNOWN:
-                raise Exception("URL Type unknown")
-            media_extension = get_file_extension(media_path)
-            filename = f"media_{get_random_string(10)}{media_extension}"
-            if url_type == URLType.ONLINE:
-                with tempfile.TemporaryDirectory() as tmp_dir:
-                    tmp_media_path = os.path.join(tmp_dir, f"tmp{media_extension}")
-                    save_image_from_url(url=media_path, save_path=tmp_media_path)
-                    return await self.__send_with_file(
-                        file_path=tmp_media_path, filename=filename, content=value
-                    )
-            else:
-                return await self.__send_with_file(
-                    file_path=media_path, filename=filename, content=value
-                )
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            if len(media_paths) is not None:
+                for media_path in media_paths:
+                    url_type = get_url_type(media_path)
+                    if url_type == URLType.UNKNOWN:
+                        raise Exception("URL Type unknown")
+                    media_extension = get_file_extension(media_path)
+                    filename = f"media_{get_random_string(10)}{media_extension}"
+                    if url_type == URLType.ONLINE:
+                        tmp_media_path = os.path.join(tmp_dir, f"tmp{media_extension}")
+                        save_image_from_url(url=media_path, save_path=tmp_media_path)
+                        files.append(File(tmp_media_path, filename=filename))
+                    else:
+                        files.append(File(media_path, filename=filename))
 
-        return await self.__discord_channel.send(content=value)
+            return await self.__discord_channel.send(content=value, files=files)
 
     @discord_message_to_stored_record
     @wait_for_ready
