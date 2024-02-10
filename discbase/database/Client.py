@@ -7,7 +7,7 @@ from functools import wraps
 from typing import Optional
 
 from discord import Client as DiscordClient
-from discord import File, Intents, Message
+from discord import File, Intents
 from discord.abc import GuildChannel
 
 from discbase.enumeration.URLType import URLType
@@ -46,12 +46,6 @@ class Client:
         """
         self.__ready = False
         self.__client_tasks = []
-
-    async def __send_with_file(self, *, file_path: str, filename: str, content: str) -> Message:
-        files = []
-        for _ in range(10):
-            files.append(File(file_path, filename=filename))
-        return await self.__discord_channel.send(content=content, files=files)
 
     def wait_for_ready(func: callable) -> callable:
         """

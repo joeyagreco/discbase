@@ -124,6 +124,8 @@ _Run these commands from the root folder_
 - Install Dependencies: `make deps`
 - Format Code: `make fmt`
 - Run Unit Tests: `make test-unit`
+- Run E2E Tests: `make test-e2e`
+- Run All Tests: `make test-all`
 
 ## Styling
 
