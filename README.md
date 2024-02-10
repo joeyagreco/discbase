@@ -31,7 +31,7 @@ pip install discbase
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/create_an_application.png" width="400">
 
 3. Navigate to `Settings/General Information` and save the `Application ID`
-<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_general_information.png" width="400"
+<img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/settings_general_information.png" width="400">
 <img src="https://raw.githubusercontent.com/joeyagreco/discbase/main/img/quickstart/application_id.png" width="400">
 
 4. Navigate to `Settings/Bot`
