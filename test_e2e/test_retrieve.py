@@ -42,6 +42,17 @@ class TestRetrieve(unittest.TestCase):
 
         run_async_test(self, main())
 
+    def test_retrieve_multiple_images(self):
+        async def main():
+            stored_record = await self.client.retrieve(record_id=1205749135924404224)
+            self.assertEqual("", stored_record.text_data)
+            self.assertIsNotNone(stored_record.record_id)
+            self.assertEqual(3, len(stored_record.media_urls))
+            self.assertIsNotNone(stored_record.created_at_utc)
+            self.assertIsNotNone(stored_record.discord_message)
+
+        run_async_test(self, main())
+
     def test_retrieve_text_and_image(self):
         async def main():
             stored_record = await self.client.retrieve(record_id=1204652081420443668)
