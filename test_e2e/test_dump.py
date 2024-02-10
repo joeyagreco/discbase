@@ -7,6 +7,8 @@ from test_e2e.util import get_client, run_async_test
 
 class TestDump(unittest.TestCase):
     RESOURCES_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "resources"))
+    LOCAL_IMAGE_PATH = os.path.join(RESOURCES_PATH, "image.jpg")
+    ONLINE_IMAGE_URL = "https://en.wikipedia.org/wiki/Discord#/media/File:Discord_logo.svg"
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -31,10 +33,9 @@ class TestDump(unittest.TestCase):
 
         run_async_test(self, main())
 
-    def test_dump_image_local(self):
+    def test_dump_image_local_single_image(self):
         async def main():
-            local_image_path = os.path.join(self.RESOURCES_PATH, "image.jpg")
-            stored_record = await self.client.dump(media_paths=[local_image_path])
+            stored_record = await self.client.dump(media_paths=[self.LOCAL_IMAGE_PATH])
             self.assertEqual("", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
             self.assertEqual(1, len(stored_record.media_urls))
@@ -43,24 +44,59 @@ class TestDump(unittest.TestCase):
 
         run_async_test(self, main())
 
-    def test_dump_image_online(self):
+    def test_dump_image_local_multiple_images(self):
         async def main():
             stored_record = await self.client.dump(
-                media_paths=["https://en.wikipedia.org/wiki/Discord#/media/File:Discord_logo.svg"]
+                media_paths=[self.LOCAL_IMAGE_PATH, self.LOCAL_IMAGE_PATH, self.LOCAL_IMAGE_PATH]
             )
             self.assertEqual("", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
+            self.assertEqual(3, len(stored_record.media_urls))
+            self.assertIsNotNone(stored_record.created_at_utc)
+            self.assertIsNotNone(stored_record.discord_message)
+
+        run_async_test(self, main())
+
+    def test_dump_image_online_single_image(self):
+        async def main():
+            stored_record = await self.client.dump(media_paths=[self.ONLINE_IMAGE_URL])
+            self.assertEqual("", stored_record.text_data)
+            self.assertIsNotNone(stored_record.record_id)
             self.assertEqual(1, len(stored_record.media_urls))
+            self.assertIsNotNone(stored_record.created_at_utc)
+            self.assertIsNotNone(stored_record.discord_message)
+
+        run_async_test(self, main())
+
+    def test_dump_image_online_multiple_images(self):
+        async def main():
+            stored_record = await self.client.dump(
+                media_paths=[self.ONLINE_IMAGE_URL, self.ONLINE_IMAGE_URL, self.ONLINE_IMAGE_URL]
+            )
+            self.assertEqual("", stored_record.text_data)
+            self.assertIsNotNone(stored_record.record_id)
+            self.assertEqual(3, len(stored_record.media_urls))
+            self.assertIsNotNone(stored_record.created_at_utc)
+            self.assertIsNotNone(stored_record.discord_message)
+
+        run_async_test(self, main())
+
+    def test_dump_image_local_and_online_image(self):
+        async def main():
+            stored_record = await self.client.dump(
+                media_paths=[self.LOCAL_IMAGE_PATH, self.ONLINE_IMAGE_URL]
+            )
+            self.assertEqual("", stored_record.text_data)
+            self.assertIsNotNone(stored_record.record_id)
+            self.assertEqual(2, len(stored_record.media_urls))
             self.assertIsNotNone(stored_record.created_at_utc)
             self.assertIsNotNone(stored_record.discord_message)
 
         run_async_test(self, main())
 
     def test_dump_text_and_image(self):
-        local_image_path = os.path.join(self.RESOURCES_PATH, "image.jpg")
-
         async def main():
-            stored_record = await self.client.dump(value="foo", media_paths=[local_image_path])
+            stored_record = await self.client.dump(value="foo", media_paths=[self.LOCAL_IMAGE_PATH])
             self.assertEqual("foo", stored_record.text_data)
             self.assertIsNotNone(stored_record.record_id)
             self.assertEqual(1, len(stored_record.media_urls))
