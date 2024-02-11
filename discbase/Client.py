@@ -97,6 +97,9 @@ class Client:
         if done:
             return
 
+        if not client_run_task.done():
+            await client_run_task
+
         error = client_run_task.exception()
 
         if isinstance(error, discord.errors.LoginFailure):

@@ -35,7 +35,7 @@ class TestClientState(unittest.TestCase):
             client = Client(
                 discord_client_token="im bad",
                 discord_channel_id=TEST_CHANNEL_ID,
-                connection_timeout_seconds=5,
+                connection_timeout_seconds=3,
             )
             with self.assertRaises(discord.errors.LoginFailure):
                 await client.start()
@@ -48,7 +48,7 @@ class TestClientState(unittest.TestCase):
             client = Client(
                 discord_client_token=TEST_BOT_TOKEN,
                 discord_channel_id=12345,
-                connection_timeout_seconds=5,
+                connection_timeout_seconds=3,
             )
 
             with self.assertRaises(Exception) as context:
