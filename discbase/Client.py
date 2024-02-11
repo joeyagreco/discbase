@@ -70,14 +70,14 @@ class Client:
 
         @self.__discord_client.event
         async def on_ready():
-            self.__logger.important(f"DISCBASE IS RUNNING WITH USER {self.__discord_client.user}")
+            self.__ready = True
             self.__discord_channel = self.__discord_client.get_channel(self.__discord_channel_id)
             if self.__discord_channel == None:
                 self.__startup_exception = Exception(
                     f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}"
                 )
                 return
-            self.__ready = True
+            self.__logger.important(f"DISCBASE IS RUNNING WITH USER {self.__discord_client.user}")
 
         client_run_task = asyncio.create_task(
             self.__discord_client.start(self.__discord_client_token)
@@ -93,6 +93,7 @@ class Client:
             {wait_to_connect_task}, timeout=self.__connection_timeout_seconds
         )
         if self.__startup_exception is not None:
+            await self.stop()
             raise self.__startup_exception
         if done:
             return
