@@ -4,7 +4,7 @@ import time
 
 from dotenv import load_dotenv
 
-from discbase.database.Client import Client
+from discbase.Client import Client
 from discbase.util.EnvironmentReader import EnvironmentReader
 
 if __name__ == "__main__":

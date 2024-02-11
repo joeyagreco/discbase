@@ -2,7 +2,7 @@ import unittest
 
 from dotenv import load_dotenv
 
-from discbase.database.Client import Client
+from discbase.Client import Client
 from discbase.util.EnvironmentReader import EnvironmentReader
 
 
