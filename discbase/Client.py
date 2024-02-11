@@ -6,6 +6,7 @@ import tempfile
 from functools import wraps
 from typing import Optional
 
+import discord
 from discord import Client as DiscordClient
 from discord import File, Intents
 from discord.abc import GuildChannel
@@ -19,19 +20,21 @@ from discbase.util.image import save_image_from_url
 
 
 class Client:
-    def __init__(self, *, discord_client_token: str, discord_channel_id: int):
+    def __init__(
+        self,
+        *,
+        discord_client_token: str,
+        discord_channel_id: int,
+        connection_timeout_seconds: int = 5,
+    ):
         self.__logger = CustomLogger.get_logger()
         self.__discord_client_token = discord_client_token
         self.__discord_channel_id = discord_channel_id
+        self.__connection_timeout_seconds = connection_timeout_seconds
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
-        self.__client_tasks = []  # TODO: create a process to prune this as the tasks finish
+        self.__client_tasks = []
         self.__ready = False
-
-    def __del__(self):
-        # NOTE: this is not guaranteed to be called on instance deletion,
-        # but it is better than not having it in case consumers forget to stop the client.
-        asyncio.run(self.stop())
 
     async def __aenter__(self) -> Client:
         await self.start()
@@ -39,32 +42,6 @@ class Client:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> Client:
         await self.stop()
-
-    def __cleanup_after_stop(self) -> None:
-        """
-        Puts client into a good state after it has been stopped.
-        """
-        self.__ready = False
-        self.__client_tasks = []
-
-    def wait_for_ready(func: callable) -> callable:
-        """
-        Waits for the client to be ready before running the wrapped function.
-        If the client is not ready before the timeout, will raise an exception.
-        """
-
-        @wraps(func)
-        async def wrapper(self, *args, **kwargs) -> any:
-            max_wait_time_seconds = 5
-            for _ in range(max_wait_time_seconds):
-                if self.__ready:
-                    return await func(self, *args, **kwargs)
-                await asyncio.sleep(1)
-            log_and_raise(
-                self.__logger, "TIMED OUT WAITING TO CONNECT AFTER {max_wait_time_seconds} SECONDS"
-            )
-
-        return wrapper
 
     def discord_message_to_stored_record(func: callable) -> callable:
         """
@@ -83,7 +60,7 @@ class Client:
         """
         Checks if this client is alive and running.
         """
-        return self.__ready or len(self.__client_tasks) > 0
+        return self.__ready
 
     async def start(self):
         """
@@ -101,19 +78,35 @@ class Client:
                 )
             self.__ready = True
 
-        self.__client_tasks.append(
-            asyncio.create_task(self.__discord_client.start(self.__discord_client_token))
+        client_run_task = asyncio.create_task(
+            self.__discord_client.start(self.__discord_client_token)
         )
+        self.__client_tasks.append(client_run_task)
+
         await asyncio.sleep(0)  # Allow the event loop to start the client
-        await self.__discord_client.wait_until_ready()
+
+        wait_to_connect_task = asyncio.create_task(self.__discord_client.wait_until_ready())
+        self.__client_tasks.append(wait_to_connect_task)
+        # wait for a connection to discord with a timeout
+        done, _ = await asyncio.wait(
+            {wait_to_connect_task}, timeout=self.__connection_timeout_seconds
+        )
+        if done:
+            return
+
+        error = client_run_task.exception()
+
+        if isinstance(error, discord.errors.LoginFailure):
+            self.__logger.error("unable to login to discord")
+        await self.stop()
+        raise error
 
     async def stop(self):
         """
         Stops the client.
         THE CLIENT MUST BE STOPPED IF STARTED BEFORE TERMINATION.
         """
-        if not self.alive():
-            return
+        self.__logger.info("JG STOP CLALED")
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
             task_name = getattr(task.get_coro(), "__name__", "Unknown Task")
@@ -123,10 +116,12 @@ class Client:
                 await task
             except asyncio.CancelledError as e:
                 self.__logger.debug(e)
-        self.__cleanup_after_stop()
+        await self.__discord_client.close()
+        self.__ready = False
+        self.__client_tasks = []
 
     @discord_message_to_stored_record
-    @wait_for_ready
+    # @wait_for_ready
     async def dump(
         self, *, value: Optional[str] = None, media_paths: Optional[list[str]] = None
     ) -> StoredRecord:
@@ -162,7 +157,7 @@ class Client:
             return await self.__discord_channel.send(content=value, files=files)
 
     @discord_message_to_stored_record
-    @wait_for_ready
+    # @wait_for_ready
     async def retrieve(self, *, record_id: Optional[int] = None) -> StoredRecord:
         """
         Retrieves the data from the Discord database.

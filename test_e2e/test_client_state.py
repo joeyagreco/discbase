@@ -1,6 +1,9 @@
 import asyncio
 import unittest
 
+import discord
+
+from discbase.Client import Client
 from test_e2e.util import get_client
 
 
@@ -25,3 +28,17 @@ class TestClientState(unittest.TestCase):
 
         asyncio.run(main())
         self.assertFalse(client.alive())
+
+    def test_create_client_with_invalid_client_token(self):
+        # TODO: this passes but logs "Unclosed connector". Not sure why.
+        async def main():
+            client = Client(
+                discord_client_token="im bad",
+                discord_channel_id=12345,
+                connection_timeout_seconds=5,
+            )
+            with self.assertRaises(discord.errors.LoginFailure):
+                await client.start()
+            self.assertFalse(client.alive())
+
+        asyncio.run(main())
