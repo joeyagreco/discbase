@@ -74,7 +74,7 @@ if __name__ == "__main__":
         await client.start()
         try:
             # store some text data and some media
-            stored_record = await client.dump(value="some message", media_paths="[https://some_image.png"])
+            stored_record = await client.dump(value="some message", media_paths=["https://some_image.png"])
             # retrieve the data
             retrieved_record = await client.retrieve(record_id=stored_record.record_id)
             my_message = stored_record.text_data
