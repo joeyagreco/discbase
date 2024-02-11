@@ -14,7 +14,6 @@ from discord.abc import GuildChannel
 from discbase.enumeration.URLType import URLType
 from discbase.model.StoredRecord import StoredRecord
 from discbase.util.CustomLogger import CustomLogger
-from discbase.util.error import log_and_raise
 from discbase.util.general import get_file_extension, get_random_string, get_url_type
 from discbase.util.image import save_image_from_url
 
@@ -33,6 +32,7 @@ class Client:
         self.__connection_timeout_seconds = connection_timeout_seconds
         self.__discord_client = DiscordClient(intents=Intents.all())
         self.__discord_channel: Optional[GuildChannel] = None
+        self.__startup_exception = None
         self.__client_tasks = []
         self.__ready = False
 
@@ -73,9 +73,10 @@ class Client:
             self.__logger.important(f"DISCBASE IS RUNNING WITH USER {self.__discord_client.user}")
             self.__discord_channel = self.__discord_client.get_channel(self.__discord_channel_id)
             if self.__discord_channel == None:
-                log_and_raise(
-                    self.__logger, f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}"
+                self.__startup_exception = Exception(
+                    f"COULD NOT RETRIEVE CHANNEL WITH ID {self.__discord_channel_id}"
                 )
+                return
             self.__ready = True
 
         client_run_task = asyncio.create_task(
@@ -91,6 +92,8 @@ class Client:
         done, _ = await asyncio.wait(
             {wait_to_connect_task}, timeout=self.__connection_timeout_seconds
         )
+        if self.__startup_exception is not None:
+            raise self.__startup_exception
         if done:
             return
 
