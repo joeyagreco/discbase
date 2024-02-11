@@ -106,7 +106,6 @@ class Client:
         Stops the client.
         THE CLIENT MUST BE STOPPED IF STARTED BEFORE TERMINATION.
         """
-        self.__logger.info("JG STOP CLALED")
         self.__logger.info("STOPPING DISCORD CLIENT")
         for task in self.__client_tasks:
             task_name = getattr(task.get_coro(), "__name__", "Unknown Task")
