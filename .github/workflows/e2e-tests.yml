@@ -28,6 +28,7 @@ jobs:
   build:
     name: e2e tests
     runs-on: ubuntu-latest
+    timeout-minutes: 3 # in case our e2e tests hang for some reason
 
     steps:
       - uses: actions/checkout@v3
