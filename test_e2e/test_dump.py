@@ -104,3 +104,23 @@ class TestDump(unittest.TestCase):
             self.assertIsNotNone(stored_record.discord_message)
 
         run_async_test(self, main())
+
+    def test_dump_image_invalid_url(self):
+        async def main():
+            with self.assertRaises(Exception) as context:
+                await self.client.dump(media_paths=["im invalid"])
+            self.assertTrue(self.client.alive())
+            self.assertEqual("url is invalid: 'im invalid'", str(context.exception))
+
+        run_async_test(self, main())
+
+    def test_dump_image_invalid_online_url(self):
+        async def main():
+            with self.assertRaises(Exception) as context:
+                await self.client.dump(media_paths=["https://im-invalid.com"])
+            self.assertTrue(self.client.alive())
+            self.assertTrue(
+                str(context.exception).startswith("could not save url: 'https://im-invalid.com'")
+            )
+
+        run_async_test(self, main())

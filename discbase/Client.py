@@ -150,7 +150,7 @@ class Client:
                 for media_path in media_paths:
                     url_type = get_url_type(media_path)
                     if url_type == URLType.UNKNOWN:
-                        await self.stop()
+                        # await self.stop()
                         log_and_raise(self.__logger, f"url is invalid: '{media_path}'")
                     media_extension = get_file_extension(media_path)
                     filename = f"media_{get_random_string(10)}{media_extension}"
@@ -160,9 +160,9 @@ class Client:
                         try:
                             save_image_from_url(url=media_path, save_path=tmp_media_path)
                         except Exception as e:
-                            await self.stop()
+                            # await self.stop()
                             log_and_raise(
-                                self.__logger, f"could not save url: {media_path} -- error: {e}"
+                                self.__logger, f"could not save url: '{media_path}' -- error: {e}"
                             )
                         files.append(File(tmp_media_path, filename=filename))
                     else:
