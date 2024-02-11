@@ -150,7 +150,6 @@ class Client:
                 for media_path in media_paths:
                     url_type = get_url_type(media_path)
                     if url_type == URLType.UNKNOWN:
-                        # await self.stop()
                         log_and_raise(self.__logger, f"url is invalid: '{media_path}'")
                     media_extension = get_file_extension(media_path)
                     filename = f"media_{get_random_string(10)}{media_extension}"
@@ -160,7 +159,6 @@ class Client:
                         try:
                             save_image_from_url(url=media_path, save_path=tmp_media_path)
                         except Exception as e:
-                            # await self.stop()
                             log_and_raise(
                                 self.__logger, f"could not save url: '{media_path}' -- error: {e}"
                             )
@@ -172,8 +170,13 @@ class Client:
 
     @discord_message_to_stored_record
     # @wait_for_ready
-    async def retrieve(self, *, record_id: Optional[int] = None) -> StoredRecord:
+    async def retrieve(self, *, record_id: int) -> StoredRecord:
         """
         Retrieves the data from the Discord database.
         """
-        return await self.__discord_channel.fetch_message(record_id)
+        try:
+            return await self.__discord_channel.fetch_message(record_id)
+        except Exception as e:
+            log_and_raise(
+                self.__logger, f"unable to retrieve message with id: {record_id} -- error: {e}"
+            )

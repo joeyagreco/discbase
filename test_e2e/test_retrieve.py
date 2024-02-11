@@ -63,3 +63,14 @@ class TestRetrieve(unittest.TestCase):
             self.assertIsNotNone(stored_record.discord_message)
 
         run_async_test(self, main())
+
+    def test_retrieve_invalid_record_id(self):
+        async def main():
+            with self.assertRaises(Exception) as context:
+                await self.client.retrieve(record_id=12345)
+            self.assertTrue(self.client.alive())
+            self.assertTrue(
+                str(context.exception).startswith("unable to retrieve message with id: 12345")
+            )
+
+        run_async_test(self, main())
