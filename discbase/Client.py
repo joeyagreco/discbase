@@ -14,6 +14,7 @@ from discord.abc import GuildChannel
 from discbase.enumeration.URLType import URLType
 from discbase.model.StoredRecord import StoredRecord
 from discbase.util.CustomLogger import CustomLogger
+from discbase.util.error import log_and_raise
 from discbase.util.general import get_file_extension, get_random_string, get_url_type
 from discbase.util.image import save_image_from_url
 
@@ -149,13 +150,20 @@ class Client:
                 for media_path in media_paths:
                     url_type = get_url_type(media_path)
                     if url_type == URLType.UNKNOWN:
-                        raise Exception("URL Type unknown")
+                        await self.stop()
+                        log_and_raise(self.__logger, f"url is invalid: '{media_path}'")
                     media_extension = get_file_extension(media_path)
                     filename = f"media_{get_random_string(10)}{media_extension}"
                     if url_type == URLType.ONLINE:
                         # download locally (temporarily) before sending
                         tmp_media_path = os.path.join(tmp_dir, f"tmp{media_extension}")
-                        save_image_from_url(url=media_path, save_path=tmp_media_path)
+                        try:
+                            save_image_from_url(url=media_path, save_path=tmp_media_path)
+                        except Exception as e:
+                            await self.stop()
+                            log_and_raise(
+                                self.__logger, f"could not save url: {media_path} -- error: {e}"
+                            )
                         files.append(File(tmp_media_path, filename=filename))
                     else:
                         files.append(File(media_path, filename=filename))

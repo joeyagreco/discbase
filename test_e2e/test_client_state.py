@@ -57,3 +57,13 @@ class TestClientState(unittest.TestCase):
             self.assertEqual("COULD NOT RETRIEVE CHANNEL WITH ID 12345", str(context.exception))
 
         asyncio.run(main())
+
+    def test_dump_image_invalid_url(self):
+        async def main():
+            client = get_client()
+            with self.assertRaises(Exception) as context:
+                await client.dump(media_paths=["im invalid"])
+            self.assertFalse(client.alive())
+            self.assertEqual("url is invalid: 'im invalid'", str(context.exception))
+
+        asyncio.run(main())
