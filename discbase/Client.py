@@ -41,7 +41,7 @@ class Client:
         await self.start()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> Client:
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.stop()
 
     def discord_message_to_stored_record(func: callable) -> callable:
