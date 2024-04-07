@@ -128,7 +128,6 @@ class Client:
         self.__client_tasks = []
 
     @discord_message_to_stored_record
-    # @wait_for_ready
     async def dump(
         self, *, value: Optional[str] = None, media_paths: Optional[list[str]] = None
     ) -> StoredRecord:
@@ -169,7 +168,6 @@ class Client:
             return await self.__discord_channel.send(content=value, files=files)
 
     @discord_message_to_stored_record
-    # @wait_for_ready
     async def retrieve(self, *, record_id: int) -> StoredRecord:
         """
         Retrieves the data from the Discord database.
